@@ -5,7 +5,7 @@ var Bluebird   = require('bluebird');
 var resolve    = require('path').resolve;
 var ramlParser = require('raml-parser');
 var pkg        = require('../package');
-//var languages  = require('../languages');
+var languages  = require('../languages');
 var mkdirp     = Bluebird.promisify(require('mkdirp'));
 var writeFile  = Bluebird.promisify(require('fs').writeFile);
 var cwd        = process.cwd();
@@ -25,7 +25,7 @@ var base = function (path) {
  */
 var argv = require('yargs')
     .usage([
-      'Generate DBSchema in any language.',
+      'Generate Schema in any language.',
       '$0 api.raml --output script.sql --language mysql'
     ].join('\n\n'))
     .version(pkg.version, 'version')
@@ -33,7 +33,7 @@ var argv = require('yargs')
     .describe('e', 'Entry RAML file')
     .demand('o')
     .alias('o', 'output')
-    .describe('o', 'API client output file')
+    .describe('o', 'Script output file')
     .demand('l')
     .alias('l', 'language')
     .describe('l', 'Set the generated language')
@@ -55,14 +55,14 @@ var options = {
  */
 Bluebird.resolve(options)
   .tap(function (options) {
-    //assert(languages.hasOwnProperty(options.language), 'Unsupported language');
+    assert(languages.hasOwnProperty(options.language), 'Unsupported language');
   })
   .then(function (options) {
     return ramlParser.loadFile(options.entry);
   })
-  /* .then(function (ast) {
+  .then(function (ast) {
     return languages[options.language](ast, options);
-  })*/
+  })
   .then(function (output) {
     return objectToFs(options.output, output.files);
   })

@@ -9,7 +9,7 @@ var definition = [
     '/Root:'
   ].join('\n');
 
-  raml.compose(definition).then( function(rootNode) {
+  raml.load(definition).then( function(rootNode) {
     //   console.log(rootNode);
     console.log('Root Node: ' + JSON.stringify(rootNode,true))
   }, function(error) {
