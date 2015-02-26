@@ -9,14 +9,94 @@ traits:
         pages:
           description: The number of pages to return
           type: number
-/songs:
+schemas:
+ - artist: |
+    {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "id": "http://jsonschema.net",
+      "type": "object",
+      "properties": {
+        "id": {
+          "id": "http://jsonschema.net/id",
+          "type": "string"
+        },
+        "name": {
+          "id": "http://jsonschema.net/name",
+          "type": "string"
+        },
+        "slug": {
+          "id": "http://jsonschema.net/slug",
+          "type": "string"
+        },
+        "total_songs": {
+          "id": "http://jsonschema.net/total_songs",
+          "type": "integer"
+        },
+        "total_followers": {
+          "id": "http://jsonschema.net/total_followers",
+          "type": "integer"
+        },
+        "total_comments": {
+          "id": "http://jsonschema.net/total_comments",
+          "type": "integer"
+        },
+        "rating": {
+          "id": "http://jsonschema.net/rating",
+          "type": "integer"
+        },
+        "image": {
+          "id": "http://jsonschema.net/image",
+          "type": "string"
+        },
+        "image_normal": {
+          "id": "http://jsonschema.net/image_normal",
+          "type": "string"
+        },
+        "image_mini": {
+          "id": "http://jsonschema.net/image_mini",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "slug",
+        "total_songs",
+        "total_followers",
+        "total_comments",
+        "rating",
+        "image",
+        "image_normal",
+        "image_mini"
+      ]
+     }
+ - song: |
+    {
+      "type": "object",
+      "$schema": "http://json-schema.org/draft-03/schema",
+      "id": "http://jsonschema.net",
+      "required": true,
+      "properties": {
+        "songTitle": {
+          "type": "string",
+          "required": true
+        }, 
+        "albumId": {
+          "type": "string",
+          "required": true,
+          "minLength": 36,
+          "maxLength": 36
+        }
+      }
+    }
+/artist:
   is: [ paged]
   get:
     queryParameters:
       genre:
         description: filter the songs by genre
   post:
-  /{songId}:
+  /{artistId}:
     get:
       responses:
         200:
@@ -32,7 +112,3 @@ traits:
                   },
                   "required": [ "title", "artist" ]
                 }
-            application/xml:
-    delete:
-      description: |
-        This method will *delete* an **individual song**

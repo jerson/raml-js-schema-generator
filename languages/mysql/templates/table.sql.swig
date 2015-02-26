@@ -1,4 +1,4 @@
 create {{table}}{
 
-lalala{{title}}
+lalala{{name}}
 }

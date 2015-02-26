@@ -7,9 +7,19 @@ var render = function (file, params) {
 };
 
 module.exports = function (ast, options) {
+    
+    
+    var files = {}; 
+    console.log(ast.schemas);
+    ast.schemas.forEach(function(name,index){
+        
+         var schema = ast.schemas[name];
+        
+        files[name]=render('table.sql', {name:name,schema:schema}); 
+        
+    });
+    
     return {
-        files: {
-            'user.sql': render('table.sql', ast)
-        }
+        files: files
     };
 };
