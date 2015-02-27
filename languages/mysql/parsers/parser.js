@@ -8,7 +8,6 @@ exports.foreignType = function (property, schemas) {
     var schemaReferenced = JSON.parse(schemas[propertyReferenced]);
     if (schemaReferenced) {
 
-        var propertyReferenced = '';
         Object.keys(schemaReferenced.properties).forEach(function (name) {
 
             var property = schemaReferenced.properties[name];

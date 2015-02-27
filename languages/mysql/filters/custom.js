@@ -25,7 +25,7 @@ swig.setFilter('primaryKeys', function (properties, name) {
 
     var constraint = '';
     var primary = [];
-    var keys = Object.keys(properties);
+    var keys = typeof properties === 'object' ? Object.keys(properties) : [];
     keys.forEach(function (name) {
         var property = properties[name];
         if (property.primary) {
@@ -58,7 +58,7 @@ swig.setFilter('uniqueKeys', function (properties, name) {
 
     var constraint = '';
     var primary = [];
-    var keys = Object.keys(properties);
+    var keys = typeof properties === 'object' ? Object.keys(properties) : [];
     keys.forEach(function (name) {
         var property = properties[name];
         if (property.uniqueItems || property.unique) {
@@ -87,7 +87,7 @@ swig.setFilter('foreignKeys', function (properties, name, schemas) {
 
     var constraint = '';
     var primary = [];
-    var keys = Object.keys(properties);
+    var keys = typeof properties === 'object' ? Object.keys(properties) : [];
     keys.forEach(function (name) {
         var property = properties[name];
         if (property.ref && property.type === 'object') {
