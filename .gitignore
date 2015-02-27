@@ -27,7 +27,7 @@ node_modules
 # Users Environment Variables
 .lock-wscript
 
-
+*.sql
 .c9
 .idea
 output/

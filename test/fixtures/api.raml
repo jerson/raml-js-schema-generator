@@ -18,23 +18,35 @@ schemas:
       "properties": {
         "id": {
           "id": "http://jsonschema.net/id",
-          "type": "string"
+          "type": "string",
+          "indentity":true,
+          "primary": true
+
         },
         "name": {
           "id": "http://jsonschema.net/name",
-          "type": "string"
+          "type": "string",
+          "enum": [ "ext3", "ext4", "btrfs" ],
+          "unique": true
         },
         "slug": {
           "id": "http://jsonschema.net/slug",
-          "type": "string"
+          "type": "string",
+          "default": "21 2nd Street",
+          "enum": [
+              null,
+              "21 2nd Street"
+          ]
         },
         "total_songs": {
           "id": "http://jsonschema.net/total_songs",
-          "type": "integer"
+          "type": "integer",
+                                                                                                                                    "unique": true
         },
         "total_followers": {
           "id": "http://jsonschema.net/total_followers",
-          "type": "integer"
+          "type": "integer",
+                                                                                                                                    "unique": true
         },
         "total_comments": {
           "id": "http://jsonschema.net/total_comments",
@@ -80,7 +92,12 @@ schemas:
         "songTitle": {
           "type": "string",
           "required": true
-        }, 
+        },
+                   "artist": {
+                     "id": "http://jsonschema.net/artist",
+                                                                   "type": "object",
+                                                                                             "ref": "artist"
+                   },
         "albumId": {
           "type": "string",
           "required": true,

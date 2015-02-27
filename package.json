@@ -84,6 +84,7 @@
     "pascal-case": "^1.0.0",
     "raml-parser": "git+https://github.com/jerson/raml-js-parser.git",
     "snake-case": "^1.0.1",
+    "string": "^3.0.0",
     "swig": "^1.4.2",
     "upper-case": "^1.0.3",
     "yargs": "^3.0.4"
