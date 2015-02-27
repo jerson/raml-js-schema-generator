@@ -17,7 +17,7 @@ coverage
 .grunt
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
-build/Release
+build
 
 # Dependency directory
 # Commenting this out is preferred by some people, see
@@ -30,4 +30,7 @@ node_modules
 *.sql
 .c9
 .idea
-output/
+output
+test/output
+dist
+*.log

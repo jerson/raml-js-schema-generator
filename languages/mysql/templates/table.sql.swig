@@ -8,6 +8,6 @@ CREATE TABLE `{{ name }}` (
 
 
 {{ (schema.properties | uniqueKeys(name)) | raw }}
-{{ (schema.properties | primaryKeys(name))| raw }}
-{{ (schema.properties | foreignKeys(name,schemas))| raw }}
+{{ (schema.properties | primaryKeys(name)) | raw }}
+{{ (schema.properties | foreignKeys(name,schemas)) | raw }}
 

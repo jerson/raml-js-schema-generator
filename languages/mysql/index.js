@@ -1,6 +1,5 @@
 var swig = require('swig'),
-    util = require('util'),
-    beautify = require('./../../lib/beautify');
+    util = require('util');
 
 require('./filters/base');
 require('./filters/custom');
