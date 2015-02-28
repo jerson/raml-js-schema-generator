@@ -63,10 +63,12 @@ gulp.task('build', ['lint'], function () {
 gulp.task('serve', ['watch:dist'], function () {
 
     browserSync({
+        host: process.env.IP || 'localhost',
+        port: process.env.PORT || 300, 
         server: {
             baseDir: './',
-            index: 'test/parser.html'
-        }
+            index: 'test/parser.html' 
+        } 
     });
 
 });
