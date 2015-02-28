@@ -42,7 +42,7 @@
     "raml-to-schema": "bin/raml-to-schema.js"
   },
   "devDependencies": {
-    "bluebird": "^2.3.2",
+    "bluebird": "^2.9.13",
     "browser-sync": "^2.2.1",
     "browserify": "^8.0.2",
     "gulp": "^3.8.8",

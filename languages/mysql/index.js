@@ -1,7 +1,8 @@
 var swig = require('swig'),
     util = require('util'),
     fs = require('fs'),
-    S = require('string');
+    S = require('string'),
+    parser = require('./parsers/parser');
 
 var includeFolder = require('include-folder'),
     folder = includeFolder(__dirname + '/templates');
@@ -43,7 +44,7 @@ module.exports = function (ast, options) {
     var outputScript = '';
     Object.keys(schemas).forEach(function (name) {
 
-        var schema = JSON.parse(schemas[name]);
+        var schema = parser.schema(schemas[name]);
         outputScript += render('table.sql', {name: name, schema: schema, schemas: schemas});
         outputScript += "\n";
 

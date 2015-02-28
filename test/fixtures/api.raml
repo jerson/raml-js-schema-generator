@@ -16,12 +16,57 @@ schemas:
       "id": "http://jsonschema.net",
       "type": "object",
       "properties": {
-        "id": {
+        "ipkad": {
           "id": "http://jsonschema.net/id",
-          "type": "string",
+          "type": "integer",
           "indentity":true,
           "primary": true
 
+        },
+        "fsdfsdfdsfdsf": {
+          "id": "http://jsonschema.net/total_songs",
+          "type": "number",
+          "unique": true,
+          "primary": false
+        },
+        "difidsjff": {
+          "id": "http://jsonschema.net/total_songs",
+          "type": "boolean",
+          "unique": true
+        },
+        "difidsjfef": {
+          "id": "http://jsonschema.net/total_songs",
+          "type": "integer",
+          "unique": true
+        },
+        "difidsjf3eef": {
+          "id": "http://jsonschema.net/total_songs",
+          "type": "null",
+          "unique": true
+        },
+        "ERROROBJECT": {
+          "id": "http://jsonschema.net/total_songs",
+          "type": "object"
+        },
+        "TESSST": {
+          "id": "http://jsonschema.net/total_songs",
+          "type": "any"
+        },
+        "TESSSTDATE": {
+          "id": "http://jsonschema.net/total_songs",
+          "type": "date"
+        },
+        "TESSSTDATE": {
+          "id": "http://jsonschema.net/total_songs",
+          "type": "datetime"
+        },
+        "TESSSTDTIMESTAMP": {
+          "id": "http://jsonschema.net/total_songs",
+          "type": "timestamp"
+        },
+        "TESSSTDTIME": {
+          "id": "http://jsonschema.net/total_songs",
+          "type": "time"
         },
         "name": {
           "id": "http://jsonschema.net/name",
@@ -31,22 +76,22 @@ schemas:
         },
         "slug": {
           "id": "http://jsonschema.net/slug",
-          "type": "string",
+          "type": "varchar",
           "default": "21 2nd Street",
           "enum": [
-              "lelele",
+              "lelffele",
               "21 2nd Street"
           ]
         },
         "total_songs": {
           "id": "http://jsonschema.net/total_songs",
           "type": "integer",
-                                                                                                                                    "unique": true
+          "unique": true
         },
         "total_followers": {
           "id": "http://jsonschema.net/total_followers",
           "type": "integer",
-                                                                                                                                    "unique": true
+           "unique": true
         },
         "total_comments": {
           "id": "http://jsonschema.net/total_comments",
@@ -93,7 +138,7 @@ schemas:
           "type": "string",
           "required": true
         },
-        "artist": {
+        "artistId": {
           "id": "http://jsonschema.net/artist",
           "type": "object",
           "ref": "artist"

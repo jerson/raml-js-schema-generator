@@ -64,7 +64,7 @@ gulp.task('serve', ['watch:dist'], function () {
 
     browserSync({
         host: process.env.IP || 'localhost',
-        port: process.env.PORT || 300, 
+        port: process.env.PORT || 3000,
         server: {
             baseDir: './',
             index: 'test/parser.html' 

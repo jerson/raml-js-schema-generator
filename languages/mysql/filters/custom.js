@@ -1,6 +1,7 @@
 var swig = require('swig'),
     S = require('string'),
     util = require('util'),
+    keysParser = require('../parsers/keys'),
     parser = require('../parsers/parser');
 
 swig.setFilter('parseType', function (property, schemas) {
@@ -17,128 +18,77 @@ swig.setFilter('isRequired', function (property, schema) {
 
 swig.setFilter('isIdentity', function (property) {
 
-    return property === 'integer' && (property.indentity || property.autoIncrement);
+    return property.type === 'integer' && (property.indentity || property.autoIncrement);
 
 });
 
-swig.setFilter('primaryKeys', function (properties, name) {
+swig.setFilter('primaryKeys', function (schema, nameSchema) {
 
-    var constraint = '';
-    var primary = [];
-    var keys = typeof properties === 'object' ? Object.keys(properties) : [];
-    keys.forEach(function (name) {
-        var property = properties[name];
-        if (property.primary) {
-            primary.push(name);
-        }
+    var keys = keysParser.primaryKeys(schema);
+    var keysNames = Object.keys(keys);
+    if (!keysNames || !keysNames.length) {
+        return '';
+    }
+
+    var values = [];
+    keysNames.forEach(function (name) {
+        values.push(util.format('`%s`', name));
     });
 
-    if (!primary.length && keys.length) {
-        primary.push(keys[0]); 
-    }
- 
-    if (primary) {
-        var values = [];
-        primary.forEach(function (value) {
-            values.push(util.format('`%s`', value));
-        });
-
-        constraint = util.format('PRIMARY KEY (%s)', values.toString());
-
-        var indexName = util.format('%s_PK', name);
-        return util.format('ALTER TABLE `%s` ADD CONSTRAINT `%s` %s;', name, indexName, constraint);
-    }
-
-    return constraint;
+    var constraint = util.format('PRIMARY KEY (%s)', values.toString());
+    var indexName = util.format('%s_PK', nameSchema);
+    return util.format('ALTER TABLE `%s` ADD CONSTRAINT `%s` %s;', nameSchema, indexName, constraint);
 
 
 });
 
-swig.setFilter('uniqueKeys', function (properties, name) {
+swig.setFilter('uniqueKeys', function (schema, nameSchema) {
 
-    var constraint = '';
-    var primary = [];
-    var keys = typeof properties === 'object' ? Object.keys(properties) : [];
-    keys.forEach(function (name) {
-        var property = properties[name];
-        if (property.uniqueItems || property.unique) {
-            primary.push(name);
-        }
-    });
-
-    if (primary) {
-
-        var values = [];
-        primary.forEach(function (value) {
-            var indexName = util.format('%s_%s_UK', name, value);
-            var fragment = util.format('UNIQUE (`%s`)', value);
-            values.push(util.format('ALTER TABLE `%s` ADD CONSTRAINT `%s` %s;', name, indexName, fragment));
-        });
-
-        constraint = values.join('\n');
+    var keys = keysParser.uniqueKeys(schema);
+    var keysNames = Object.keys(keys);
+    if (!keysNames || !keysNames.length) {
+        return '';
     }
 
-    return constraint;
+    var values = [];
+    keysNames.forEach(function (name) {
+        var indexName = util.format('%s_%s_UK', nameSchema, name);
+        var fragment = util.format('UNIQUE (`%s`)', name);
+        values.push(util.format('ALTER TABLE `%s` ADD CONSTRAINT `%s` %s;', nameSchema, indexName, fragment));
+    });
 
+    return values.join('\n');
 
 });
 
-swig.setFilter('foreignKeys', function (properties, name, schemas) {
+swig.setFilter('foreignKeys', function (schema, nameSchema, schemas) {
 
-    var constraint = '';
-    var primary = [];
-    var keys = typeof properties === 'object' ? Object.keys(properties) : [];
-    keys.forEach(function (name) {
-        var property = properties[name];
-        if (property.ref && property.type === 'object') {
-            primary.push({
-                name: name,
-                properties: property
-            });
-        }
-    });
-
-    if (primary) {
-
-
-        var values = [];
-        primary.forEach(function (property) {
-
-            var propertyReferenced = property.properties.ref;
-            var schemaReferenced = JSON.parse(schemas[propertyReferenced]);
-            if (schemaReferenced) {
-
-                //FIXME deberia sorporte multiples keys ?
-                var primaryReferenced = '';
-                Object.keys(schemaReferenced.properties).forEach(function (name) {
-
-                    var property = schemaReferenced.properties[name];
-                    if (property.primary) {
-                        primaryReferenced = name;
-                        return;
-                    }
-
-                });
-
-                if (!primaryReferenced) {
-                    console.error('no se encontró PRIMARY KEY');
-                }
-
-                var value = property.name;
-                var indexName = util.format('%s_%s_FK', name, value);
-                var fragment = util.format('FOREIGN KEY (`%s`) REFERENCES %s(`%s`)', value, propertyReferenced, primaryReferenced);
-                values.push(util.format('ALTER TABLE `%s` ADD CONSTRAINT `%s` %s ON UPDATE CASCADE ON DELETE CASCADE;', name, indexName, fragment));
-
-            } else {
-                console.error('no se schema referenciado %s', property.ref);
-            }
-        });
-
-        constraint = values.join('\n');
+    var keys = keysParser.foreignKeys(schema, schemas);
+    var keysNames = Object.keys(keys);
+    if (!keysNames || !keysNames.length) {
+        return '';
     }
 
-    return constraint;
+    var values = [];
+    keysNames.forEach(function (name) {
 
+        var property = keys[name];
+        if(!property.refObject){
+            return false;
+        }
+
+        var propertyReference = property.ref;
+        var propertyReferencedKeys =  Object.keys(property.refObject);
+        var propertyReferencedKeyName = propertyReferencedKeys.length ? propertyReferencedKeys[0] : null;
+
+        var indexName = util.format('%s_%s_FK', nameSchema, name);
+        var fragment = util.format('FOREIGN KEY (`%s`) REFERENCES %s(`%s`)', name, propertyReference, propertyReferencedKeyName);
+        values.push(util.format('ALTER TABLE `%s` ADD CONSTRAINT `%s` %s ON UPDATE CASCADE ON DELETE CASCADE;', nameSchema, indexName, fragment));
+
+
+    });
+
+    return values.join('\n');
 
 });
 
