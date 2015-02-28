@@ -51,7 +51,6 @@
     </div>
     <div>
         <button type="button" id="clean">Clean</button>
-        <button type="button" id="process">Process</button>
     </div>
 </div>
 <div>
@@ -61,11 +60,10 @@
 <script type="text/javascript" src="//code.jquery.com/jquery-2.1.3.min.js"></script>
 <script type="text/javascript" src="../node_modules/raml-parser/dist/raml-parser.js"></script>
 <script type="text/javascript" src="../dist/raml-js-schema-generator.1.0.0.min.js"></script>
-<script type="text/javascript" src="http://localhost:35729/livereload.js?snipver=1"></script>
 <script type="text/javascript">
 
     var generators = require('raml-schema-generators');
-    var $output = $('#output'); // $? wtf? moving the PHP horrible torture to JS? <--- .|.
+    var $output = $('#output');
     var $input = $('#input');
     var $files = $('#files');
     var $languages = $('#languages');
@@ -91,14 +89,9 @@
         });
     });
 
-    $input.on('keypress keyup change', function() {
-        process($(this).val());
-    });
-    
-    var process = function (value) {
-        $output.text('Processing...');
-         RAML.Parser.load(value).then(function (data) {
+    $input.on('keypress keyup change', function () {
 
+        RAML.Parser.load($(this).val()).then(function (data) {
             var generatedScript = generateSchema(data).files;
             var outputFiles = [];
 
@@ -110,11 +103,9 @@
         }, function (error) {
             $output.text(error);
         });
-    };
-    
-    $process.click(function(){
-        process($input.val());
+
     });
+
 
     $files.trigger('change');
 
