@@ -13,7 +13,13 @@
     "generator",
     "javascript"
   ],
-  "author": "Gerson Alexander Pardo Gamez",
+  "author": "Gerson Alexander Pardo Gamez <jeral17@gmail.com>",
+  "contributors": [
+    {
+      "name": "Jairo Alejandro Honorio Diaz",
+      "email": "registrofx@gmail.com"
+    }
+  ],
   "license": "GPL",
   "bugs": {
     "url": "https://github.com/jerson/raml-js-schema-generator/issues"
