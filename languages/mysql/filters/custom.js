@@ -34,9 +34,9 @@ swig.setFilter('primaryKeys', function (properties, name) {
     });
 
     if (!primary.length && keys.length) {
-        primary.push(keys[0])
+        primary.push(keys[0]); 
     }
-
+ 
     if (primary) {
         var values = [];
         primary.forEach(function (value) {

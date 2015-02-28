@@ -3,6 +3,10 @@ var gulp = require('gulp');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var uglify = require('gulp-uglify');
+var jshint = require('gulp-jshint');
+var watch = require('gulp-watch');
+var connect = require('gulp-connect');
+var notify = require("gulp-notify");
 var sourcemaps = require('gulp-sourcemaps');
 
 var getBundleName = function () {
@@ -11,13 +15,36 @@ var getBundleName = function () {
     return name + '.' + version + '.' + 'min';
 };
 
-gulp.task('build', function () {
+var baseFile = './languages/index.js'; 
+var dirs = ['./{bin,languages}/*.js','./languages/**/*.js'];
 
-    var bundler = browserify(['./languages/index.js'], {
+gulp.task('watch', function () {
+    watch(dirs, function () {
+        notify('reloading');
+        gulp.start('build');
+    }); 
+}); 
+
+gulp.task('watch:dist', function () {
+    watch(['./dist/*.js','./test/*.html','./test/**/*.raml'], function () {
+        notify('reloading'); 
+        connect.reload();  
+    }); 
+}); 
+  
+gulp.task('lint', function() {
+  return gulp.src(dirs)
+    .pipe(jshint())
+    .pipe(jshint.reporter('default'));
+});
+
+gulp.task('build', ['lint'], function () {
+
+    var bundler = browserify([baseFile], {
         debug: true
     });
 
-    bundler.require('./languages/index.js', {expose: 'schema-generators'})
+    bundler.require(baseFile, {expose: 'raml-schema-generators'})
     bundler.transform('folderify');
 
     var bundle = function () {
@@ -25,15 +52,24 @@ gulp.task('build', function () {
             .bundle()
             .pipe(source(getBundleName() + '.js'))
             .pipe(buffer())
-            //.pipe(sourcemaps.init({loadMaps: true}))
-            //  .pipe(uglify())
-            //.pipe(sourcemaps.write('./'))
+            .pipe(sourcemaps.init({loadMaps: true}))
+            .pipe(uglify())
+            .pipe(sourcemaps.write('./'))
             .pipe(gulp.dest('./dist/'));
     };
 
     return bundle();
 });
+ 
+gulp.task('serve', ['watch:dist'], function () {
+  connect.server({ 
+    root: __dirname,
+    port: 8154,
+    host: '0.0.0.0',  
+    livereload: true 
+  });
+}); 
 
-gulp.task('default', ['build'], function () {
+gulp.task('default', ['serve','watch'], function () {
 
 });
