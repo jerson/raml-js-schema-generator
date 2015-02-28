@@ -5,9 +5,9 @@ var buffer = require('vinyl-buffer');
 var uglify = require('gulp-uglify');
 var jshint = require('gulp-jshint');
 var watch = require('gulp-watch');
-var connect = require('gulp-connect');
 var notify = require("gulp-notify");
 var sourcemaps = require('gulp-sourcemaps');
+var browserSync = require('browser-sync');
 
 var getBundleName = function () {
     var version = require('./package.json').version;
@@ -15,27 +15,26 @@ var getBundleName = function () {
     return name + '.' + version + '.' + 'min';
 };
 
-var baseFile = './languages/index.js'; 
-var dirs = ['./{bin,languages}/*.js','./languages/**/*.js'];
+var baseFile = './languages/index.js';
 
 gulp.task('watch', function () {
-    watch(dirs, function () {
-        notify('reloading');
+    watch(['./{bin,languages}/*.js', './languages/**/*.{js,swig}'], function () {
+        notify({message: 'building'});
         gulp.start('build');
-    }); 
-}); 
+    });
+});
 
 gulp.task('watch:dist', function () {
-    watch(['./dist/*.js','./test/*.html','./test/**/*.raml'], function () {
-        notify('reloading'); 
-        connect.reload();  
-    }); 
-}); 
-  
-gulp.task('lint', function() {
-  return gulp.src(dirs)
-    .pipe(jshint())
-    .pipe(jshint.reporter('default'));
+    watch(['./dist/*.js', './test/*.html', './test/**/*.raml'], function () {
+        notify({message: 'reloading'});
+        browserSync.reload();
+    });
+});
+
+gulp.task('lint', function () {
+    return gulp.src(['./{bin,languages}/*.js', './languages/**/*.js'])
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'));
 });
 
 gulp.task('build', ['lint'], function () {
@@ -44,7 +43,7 @@ gulp.task('build', ['lint'], function () {
         debug: true
     });
 
-    bundler.require(baseFile, {expose: 'raml-schema-generators'})
+    bundler.require(baseFile, {expose: 'raml-schema-generators'});
     bundler.transform('folderify');
 
     var bundle = function () {
@@ -60,16 +59,18 @@ gulp.task('build', ['lint'], function () {
 
     return bundle();
 });
- 
-gulp.task('serve', ['watch:dist'], function () {
-  connect.server({ 
-    root: __dirname,
-    port: 8154,
-    host: '0.0.0.0',  
-    livereload: true 
-  });
-}); 
 
-gulp.task('default', ['serve','watch'], function () {
+gulp.task('serve', ['watch:dist'], function () {
+
+    browserSync({
+        server: {
+            baseDir: './',
+            index: 'test/parser.html'
+        }
+    });
+
+});
+
+gulp.task('default', ['build', 'watch', 'serve'], function () {
 
 });

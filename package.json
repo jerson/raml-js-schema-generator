@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "bluebird": "^2.3.2",
+    "browser-sync": "^2.2.1",
     "browserify": "^8.0.2",
     "gulp": "^3.8.8",
     "gulp-browserify": "^0.5.1",
