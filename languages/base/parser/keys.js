@@ -1,4 +1,4 @@
-var parser = require('./parser'),
+var schemaParser = require('./schema'),
     util = require('util');
 
 exports.foreignKeys = function (schema, schemas) {
@@ -29,7 +29,7 @@ exports.foreignKey = function (name, schema, schemas) {
             return false;
         }
 
-        var schemaReferenced = parser.schema(schemas[propertyReferenced]);
+        var schemaReferenced = schemaParser.parse(schemas[propertyReferenced]);
         if (schemaReferenced) {
             property.refObject = exports.firstPrimaryKey(schemaReferenced);
 

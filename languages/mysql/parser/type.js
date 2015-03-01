@@ -1,9 +1,7 @@
 var util = require('util'),
-    keysParser = require('./keys');
+    keysParser = require('../parser/type'),
+    schemaParser = require('../../base/parser/schema');
 
-exports.schema = function(schemaString){
-    return JSON.parse(schemaString);
-};
 
 exports.foreignType = function (property, schemas) {
 
@@ -12,7 +10,7 @@ exports.foreignType = function (property, schemas) {
     var propertyReferenced = property.ref;
     if (schemas.hasOwnProperty(propertyReferenced)) {
 
-        var schemaReferenced = exports.schema(schemas[propertyReferenced]);
+        var schemaReferenced = schemaParser.parse(schemas[propertyReferenced]);
         if (schemaReferenced.properties) {
             Object.keys(schemaReferenced.properties).forEach(function (name) {
 
@@ -36,6 +34,10 @@ exports.foreignType = function (property, schemas) {
 
 };
 
+exports.length = function (property) {
+    return property.maximum ? property.maximum.toString().length : 255;
+};
+
 exports.type = function (property, schemas) {
 
     var type = '';
@@ -53,27 +55,7 @@ exports.type = function (property, schemas) {
         return type;
     }
 
-    var length = property.maxLength ? property.maxLength : (property.length ? property.length : 255 );
-
-    //  CREATE TABLE `dsfsdfdsf` (
-    //`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-    //`pruebaq` tinyint(1) DEFAULT NULL,
-    //`prueba3` float DEFAULT NULL,
-    //`prueba5` double DEFAULT NULL,
-    //`weqwewqe` double DEFAULT NULL,
-    //`wewqe` double DEFAULT NULL,
-    //`wrerwe` decimal(10,0) DEFAULT NULL,
-    //`werwewr` char(1) DEFAULT NULL,
-    //`werwerds` varchar(455) DEFAULT NULL,
-    //`asdasd` int(11) DEFAULT NULL,
-    //`qkeoqwje` text,
-    //`werewrsssss` date DEFAULT NULL,
-    //`tytrytrytr` datetime DEFAULT NULL,
-    //`dfsdhewsdfsd` timestamp NULL DEFAULT NULL,
-    //`dsfsdcxq` time DEFAULT NULL,
-    //`rwasdvbv` year(4) DEFAULT NULL,
-    //      PRIMARY KEY (`id`)
-    //  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    var length = exports.length(property);
 
     switch (property.type) {
         case 'string':
@@ -101,7 +83,11 @@ exports.type = function (property, schemas) {
         case 'any':
             type = 'TEXT';
             break;
+
         //FIXME estos no son estandares JSON SCHEMA
+        case 'text':
+            type = 'TEXT';
+            break;
         case 'date':
             type = 'DATE';
             break;
@@ -113,6 +99,9 @@ exports.type = function (property, schemas) {
             break;
         case 'timestamp':
             type = 'TIMESTAMP';
+            break;
+        case 'file':
+            type = 'VARCHAR(250)';
             break;
         default:
             type = 'VARCHAR(250)';

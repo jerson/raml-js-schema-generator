@@ -17,8 +17,8 @@
     }
 
     body > div {
-        width: 49%;
-        display: inline-block;
+        width: 100%;
+        display: block;
         vertical-align: top;
     }
 
@@ -35,6 +35,9 @@
 
 </style>
 <body>
+<div>
+    <pre id="output">Output</pre>
+</div>
 <div>
     <div>
         <label for="files">Example input files: </label><select id="files">
@@ -53,16 +56,13 @@
         <button type="button" id="clean">Clean</button>
     </div>
 </div>
-<div>
-    <pre id="output">Output</pre>
-</div>
 
 <script type="text/javascript" src="//code.jquery.com/jquery-2.1.3.min.js"></script>
 <script type="text/javascript" src="../node_modules/raml-parser/dist/raml-parser.js"></script>
 <script type="text/javascript" src="../dist/raml-js-schema-generator.1.0.0.min.js"></script>
 <script type="text/javascript">
 
-    var generators = require('raml-schema-generators');
+    var generators = RAML.Schema.Generator;
     var $output = $('#output');
     var $input = $('#input');
     var $files = $('#files');

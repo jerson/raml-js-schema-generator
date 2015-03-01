@@ -10,155 +10,14 @@ traits:
           description: The number of pages to return
           type: number
 schemas:
- - artist: |
-    {
-      "$schema": "http://json-schema.org/draft-04/schema#",
-      "id": "http://jsonschema.net",
-      "type": "object",
-      "properties": {
-        "ipkad": {
-          "id": "http://jsonschema.net/id",
-          "type": "integer",
-          "indentity":true,
-          "primary": true
-
-        },
-        "fsdfsdfdsfdsf": {
-          "id": "http://jsonschema.net/total_songs",
-          "type": "number",
-          "unique": true,
-          "primary": false
-        },
-        "difidsjff": {
-          "id": "http://jsonschema.net/total_songs",
-          "type": "boolean",
-          "unique": true
-        },
-        "difidsjfef": {
-          "id": "http://jsonschema.net/total_songs",
-          "type": "integer",
-          "unique": true
-        },
-        "difidsjf3eef": {
-          "id": "http://jsonschema.net/total_songs",
-          "type": "null",
-          "unique": true
-        },
-        "ERROROBJECT": {
-          "id": "http://jsonschema.net/total_songs",
-          "type": "object"
-        },
-        "TESSST": {
-          "id": "http://jsonschema.net/total_songs",
-          "type": "any"
-        },
-        "TESSSTDATE": {
-          "id": "http://jsonschema.net/total_songs",
-          "type": "date"
-        },
-        "TESSSTDATE": {
-          "id": "http://jsonschema.net/total_songs",
-          "type": "datetime"
-        },
-        "TESSSTDTIMESTAMP": {
-          "id": "http://jsonschema.net/total_songs",
-          "type": "timestamp"
-        },
-        "TESSSTDTIME": {
-          "id": "http://jsonschema.net/total_songs",
-          "type": "time"
-        },
-        "name": {
-          "id": "http://jsonschema.net/name",
-          "type": "string",
-          "enum": [ "ext3", "ext4", "btrfs" ],
-          "unique": true
-        },
-        "slug": {
-          "id": "http://jsonschema.net/slug",
-          "type": "varchar",
-          "default": "21 2nd Street",
-          "enum": [
-              "lelffele",
-              "21 2nd Street"
-          ]
-        },
-        "total_songs": {
-          "id": "http://jsonschema.net/total_songs",
-          "type": "integer",
-          "unique": true
-        },
-        "total_followers": {
-          "id": "http://jsonschema.net/total_followers",
-          "type": "integer",
-           "unique": true
-        },
-        "total_comments": {
-          "id": "http://jsonschema.net/total_comments",
-          "type": "integer"
-        },
-        "rating": {
-          "id": "http://jsonschema.net/rating",
-          "type": "integer"
-        },
-        "image": {
-          "id": "http://jsonschema.net/image",
-          "type": "string"
-        },
-        "image_normal": {
-          "id": "http://jsonschema.net/image_normal",
-          "type": "string"
-        },
-        "image_mini": {
-          "id": "http://jsonschema.net/image_mini",
-          "type": "string"
-        }
-      },
-      "required": [
-        "id",
-        "name",
-        "slug",
-        "total_songs",
-        "total_followers",
-        "total_comments",
-        "rating",
-        "image",
-        "image_normal",
-        "image_mini"
-      ]
-     }
- - song: |
-    {
-      "type": "object",
-      "$schema": "http://json-schema.org/draft-03/schema",
-      "id": "http://jsonschema.net",
-      "required": true,
-      "properties": {
-        "songTitle": {
-          "type": "string",
-          "required": true
-        },
-        "artistId": {
-          "id": "http://jsonschema.net/artist",
-          "type": "object",
-          "ref": "artist"
-        },
-        "albumId": {
-          "type": "string",
-          "required": true,
-          "minLength": 36,
-          "maxLength": 36
-        }
-      }
-    }
-/artist:
-  is: [ paged]
-  get:
-    queryParameters:
-      genre:
-        description: filter the songs by genre
+ - actor: !include ../../test/fixtures/actor.schema
+ - genre: !include ../../test/fixtures/genre.schema
+ - movie: !include ../../test/fixtures/movie.schema
+ - news: !include ../../test/fixtures/news.schema
+ - autor: !include ../../test/fixtures/autor.schema
+/news:
   post:
-  /{artistId}:
+  /{newsId}:
     get:
       responses:
         200:
@@ -170,7 +29,7 @@ schemas:
                   "description": "A canonical song",
                   "properties": {
                     "title":  { "type": "string" },
-                    "artist": { "type": "string" }
+                    "body": { "type": "string" }
                   },
-                  "required": [ "title", "artist" ]
+                  "required": [ "title", "body" ]
                 }

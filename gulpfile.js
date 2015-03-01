@@ -18,21 +18,21 @@ var getBundleName = function () {
 var baseFile = './languages/index.js';
 
 gulp.task('watch', function () {
-    watch(['./{bin,languages}/*.js', './languages/**/*.{js,swig}'], function () {
+    watch(['./{bin,languages}/*.js', './{languages,lib}/**/*.{js,swig}'], function () {
         notify({message: 'building'});
         gulp.start('build');
     });
 });
 
 gulp.task('watch:dist', function () {
-    watch(['./dist/*.js', './test/*.html', './test/**/*.raml'], function () {
+    watch(['./dist/*.js', './test/*.html', './test/**/*.{raml,schema}'], function () {
         notify({message: 'reloading'});
         browserSync.reload();
     });
 });
 
 gulp.task('lint', function () {
-    return gulp.src(['./{bin,languages}/*.js', './languages/**/*.js'])
+    return gulp.src(['./{bin,languages}/*.js', './{languages,lib}/**/*.js'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
@@ -40,10 +40,13 @@ gulp.task('lint', function () {
 gulp.task('build', ['lint'], function () {
 
     var bundler = browserify([baseFile], {
-        debug: true
+        debug: true,
+        detectGlobals: true,
+        standalone: 'RAML.Schema.Generator',
+        extensions: ['js', 'json', 'swig']
     });
 
-    bundler.require(baseFile, {expose: 'raml-schema-generators'});
+    //bundler.require(baseFile, {expose: 'raml-schema-generators'});
     bundler.transform('folderify');
 
     var bundle = function () {
@@ -67,8 +70,8 @@ gulp.task('serve', ['watch:dist'], function () {
         port: process.env.PORT || 3000,
         server: {
             baseDir: './',
-            index: 'test/parser.html' 
-        } 
+            index: 'test/parser.html'
+        }
     });
 
 });
